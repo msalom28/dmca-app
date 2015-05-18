@@ -2,7 +2,7 @@
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
+use App\Http\PrepareNoticeRequest;
 use Illuminate\Http\Request;
 
 class NoticesController extends Controller 
@@ -30,6 +30,14 @@ class NoticesController extends Controller
 	public function create()
 	{
 		return view('notices.create');
+
+	}
+
+	/**
+	 * Confirm that the dmca notice has been properly generated
+	 */
+	public function confirm(PrepareNoticeRequest $request)
+	{
 
 	}
 }
