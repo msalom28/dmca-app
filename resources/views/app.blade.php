@@ -19,6 +19,8 @@
 	<![endif]-->
 </head>
 <body>
+	{{-- include from the flash package the view called message --}}
+	@include('flash::message')
 	
 	@include('partials.nav')
 	

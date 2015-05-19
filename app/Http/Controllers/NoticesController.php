@@ -26,7 +26,9 @@ class NoticesController extends Controller
 	 */
 	public function index()
 	{
-		return $this->user->notices;
+		$notices = $this->user->notices()->latest()->get();
+
+		return view('notices.index', compact('notices'));
 	}
 
 
@@ -66,12 +68,14 @@ class NoticesController extends Controller
 
 		//We are using the mail library because we will be sending one email
 		//only
-		Mail::queue('emails.dmca', compact('notice'), function($message) use ($notice) {
+		Mail::queue(['text' => 'emails.dmca'], compact('notice'), function($message) use ($notice) {
 
 			$message->from($notice->getOwnerEmail())
 					->to($notice->getRecipientEmail())
 					->subject('DMCA Notice');
 		});
+
+		flash('Your DMCA notice has been delivered.');
 
 		/**
 		 * You use Mail::raw to send a custom email
@@ -91,6 +95,20 @@ class NoticesController extends Controller
 		// $notice = session()->get('dmca') + ['template' => $request->input['template']];
 
 		// Auth::user()->notice()->create($notice);
+	}
+
+	/**
+	 * Update the notice
+	 */
+	public function update($noticeId, Request $request)
+	{
+		$isRemoved = $request->has('content_removed');
+
+		Notice::findOrFail($noticeId)
+			->update(['content_removed' => $isRemoved]);
+
+			//return back because we are not using javascript
+			return redirect()->back();
 	}
 
 	/**
